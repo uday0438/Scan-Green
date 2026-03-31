@@ -1,0 +1,6 @@
+FAILED: models/gemini-2.5-flash -> 429 You exceeded your current quota, please check your plan and billing details. For more informatio
+FAILED: models/gemini-2.5-pro -> 429 You exceeded your current quota, please check your plan and billing details. For more informatio
+FAILED: models/gemini-2.0-flash -> 429 You exceeded your current quota, please check your plan and billing details. For more informatio
+FAILED: models/gemini-1.5-flash -> 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateCon
+FAILED: models/gemini-flash-latest -> 429 You exceeded your current quota, please check your plan and billing details. For more informatio
+FAILED: models/gemini-pro-latest -> 429 You exceeded your current quota, please check your plan and billing details. For more informatio

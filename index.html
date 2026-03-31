@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ScanGreen | Plastic-Free Future</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary-green: #059669;
+      --glass-border: rgba(255, 255, 255, 0.6);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    }
+
+    /* --- GLOBAL TEXT SIZE SCALING --- */
+    html[data-text-size="small"] {
+      font-size: 14px;
+    }
+
+    html[data-text-size="medium"] {
+      font-size: 16px;
+    }
+
+    html[data-text-size="large"] {
+      font-size: 20px;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      /* Professional Nature Background with Whitewash Overlay for Readability */
+      background-image:
+        linear-gradient(135deg, rgba(236, 253, 245, 0.85) 0%, rgba(255, 255, 255, 0.92) 100%),
+        url('https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?q=80&w=2560&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+      color: #1e293b;
+      overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* --- DARK MODE OVERRIDES --- */
+    html.dark body {
+      background-image:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.98) 100%),
+        url('https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?q=80&w=2560&auto=format&fit=crop');
+      color: #f1f5f9;
+    }
+
+    html.dark .glass-panel {
+      background: rgba(30, 41, 59, 0.7);
+      border-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    /* Invert text colors for dark mode compatibility */
+    html.dark .text-slate-800,
+    html.dark .text-slate-900 {
+      color: #f8fafc !important;
+    }
+
+    html.dark .text-slate-700 {
+      color: #e2e8f0 !important;
+    }
+
+    html.dark .text-slate-600 {
+      color: #cbd5e1 !important;
+    }
+
+    html.dark .text-slate-500 {
+      color: #94a3b8 !important;
+    }
+
+    /* Invert container backgrounds for dark mode */
+    html.dark .bg-white {
+      background-color: #1e293b !important;
+      border-color: #334155;
+    }
+
+    html.dark .bg-slate-50 {
+      background-color: #0f172a !important;
+    }
+
+    html.dark .bg-slate-100 {
+      background-color: #1e293b !important;
+    }
+
+    /* --- LOADING ANIMATION --- */
+    #app-loader {
+      position: fixed;
+      inset: 0;
+      background: #ecfdf5;
+      /* Light emerald background */
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
+    }
+
+    .loader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeUp 0.8s ease-out;
+    }
+
+    .loader-icon-container {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #10B981, #047857);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.4), 0 10px 10px -5px rgba(16, 185, 129, 0.2);
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+
+    .loader-icon {
+      color: white;
+      width: 40px;
+      height: 40px;
+    }
+
+    .loader-text {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(to right, #064e3b, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .loader-subtext {
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 20px rgba(16, 185, 129, 0);
+      }
+
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Premium Glassmorphism */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+    }
+
+    .glass-panel:hover {
+      border-color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    /* ScanGreen Specific Gradients */
+    .bg-psf-safe {
+      background: linear-gradient(135deg, #34d399, #059669);
+    }
+
+    .bg-psf-warning {
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+    }
+
+    .bg-psf-danger {
+      background: linear-gradient(135deg, #f87171, #dc2626);
+    }
+
+    .bg-psf-severe {
+      background: linear-gradient(135deg, #475569, #0f172a);
+    }
+
+    /* Animation Utilities */
+    .animate-fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- LOADING SCREEN -->
+  <div id="app-loader">
+    <div class="loader-content">
+      <div class="loader-icon-container">
+        <svg xmlns="http://www.w3.org/2000/svg" class="loader-icon" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+          <path d="m9 12 2 2 4-4" />
+        </svg>
+      </div>
+      <div class="loader-text">ScanGreen</div>
+      <div class="loader-subtext">Initializing AI Auditor...</div>
+    </div>
+  </div>
+
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "ScanGreen",
+  "description": "ScanGreen: Plastic-Free Product Scanner. Identify microplastics, toxic additives, and get eco-friendly alternatives.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
