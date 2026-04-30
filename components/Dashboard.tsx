@@ -58,6 +58,19 @@ export const Dashboard: React.FC = () => {
   const displayData = loadingNews ? FALLBACK_NEWS : newsData;
   const totalSlides = displayData.length;
 
+  const getCorporateGrade = () => {
+    const history = JSON.parse(localStorage.getItem('scangreen_history') || '[]');
+    const roomAudits = history.filter((h: any) => h.type === 'room');
+    if (roomAudits.length === 0) return 'N/A';
+    
+    const avgScore = roomAudits.reduce((acc: number, curr: any) => acc + curr.score, 0) / roomAudits.length;
+    if (avgScore >= 90) return 'A+';
+    if (avgScore >= 80) return 'A';
+    if (avgScore >= 70) return 'B';
+    if (avgScore >= 60) return 'C';
+    return 'F';
+  };
+
   // --- AUTO SLIDE CAROUSEL ---
   useEffect(() => {
     if (loadingNews) return; // Don't auto-slide while "loading" state (though we show fallback)
@@ -98,13 +111,47 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="space-y-10 animate-fade-in pb-10">
       
-      {/* --- HEADER --- */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      {/* --- HEADER & GAMIFICATION --- */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
           <h2 className="text-4xl font-bold text-slate-800 tracking-tight">Welcome to ScanGreen 🌱</h2>
           <p className="text-slate-600 mt-2 text-lg">Your daily sustainability briefing & auditor.</p>
         </div>
+        
+        {/* WIDGETS ROW */}
+        <div className="flex flex-col sm:flex-row gap-4">
+            
+          {/* ENTERPRISE GRADE WIDGET */}
+          <div className="bg-white border border-blue-100 p-4 rounded-2xl shadow-sm min-w-[200px] flex items-center justify-between">
+             <div>
+                <span className="font-bold text-blue-800 text-xs uppercase tracking-wide">Enterprise Grade</span>
+                <p className="text-[10px] text-slate-400 mt-1">Based on Room Audits</p>
+             </div>
+             <div className="w-12 h-12 bg-blue-50 text-blue-700 rounded-xl flex items-center justify-center font-black text-2xl border border-blue-200">
+               {getCorporateGrade()}
+             </div>
+          </div>
+
+          {/* GAMIFICATION WIDGET */}
+          <div className="bg-white border border-emerald-100 p-4 rounded-2xl shadow-sm min-w-[250px]">
+           <div className="flex justify-between items-center mb-2">
+              <span className="font-bold text-emerald-800 text-sm uppercase tracking-wide">Eco Warrior Level</span>
+              <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                {parseInt(localStorage.getItem('scangreen_xp') || '0', 10)} XP
+              </span>
+           </div>
+           <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+             <div 
+               className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all duration-1000" 
+               style={{ width: `${Math.min(100, (parseInt(localStorage.getItem('scangreen_xp') || '0', 10) % 500) / 5)}%` }} 
+             />
+           </div>
+           <p className="text-xs text-slate-400 mt-2 text-right">
+             {500 - (parseInt(localStorage.getItem('scangreen_xp') || '0', 10) % 500)} XP to next rank
+           </p>
+        </div>
       </div>
+    </div>
 
       {/* --- BOOTSTRAP-STYLE IMAGE CAROUSEL --- */}
       <div className="relative w-full h-[450px] md:h-[520px] rounded-[2.5rem] overflow-hidden shadow-2xl group border border-white/20">

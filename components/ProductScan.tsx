@@ -95,6 +95,11 @@ export const ProductScan: React.FC = () => {
         title: analysis.verdict
       });
       localStorage.setItem('scangreen_history', JSON.stringify(history.slice(-20))); // Keep last 20
+      
+      // GAMIFICATION: Add XP
+      const currentXp = parseInt(localStorage.getItem('scangreen_xp') || '0', 10);
+      localStorage.setItem('scangreen_xp', (currentXp + 50).toString());
+      
     } catch (err) {
       setError("Failed to analyze image. Please try again.");
     } finally {
@@ -210,10 +215,25 @@ export const ProductScan: React.FC = () => {
           </div>
 
           {/* 4. Reasoning */}
-          <div className="mb-8 text-slate-600 leading-relaxed text-sm md:text-base">
+          <div className="mb-6 text-slate-600 leading-relaxed text-sm md:text-base">
             <span className="font-bold text-slate-800">Reasoning: </span>
             {result.reasoning}
           </div>
+
+          {/* Eco-Alternative Button */}
+          {result.recommended_alternative && result.eco_score < 80 && (
+            <div className="mb-8 p-6 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+               <div>
+                  <h4 className="text-emerald-800 font-bold flex items-center gap-2">
+                    <ScanLine className="w-5 h-5" /> Better Alternative Detected
+                  </h4>
+                  <p className="text-emerald-700/80 text-sm mt-1">Switch to a <strong>{result.recommended_alternative}</strong> to reduce your plastic footprint.</p>
+               </div>
+               <button className="whitespace-nowrap px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 hover:bg-emerald-700 transition-all transform hover:scale-105">
+                 Shop Alternative
+               </button>
+            </div>
+          )}
 
           {/* 5. Concerns (Red Box) */}
           {result.concerns && result.concerns.length > 0 && (

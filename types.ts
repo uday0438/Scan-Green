@@ -3,6 +3,7 @@ export interface ProductAnalysisResult {
   verdict: string; // e.g., "High Plastic"
   reasoning: string; // Detailed paragraph
   concerns: string[]; // List of specific concerns
+  recommended_alternative?: string; // e.g., "Bamboo Toothbrush"
   technical_details: {
     label: string;
     value: string;

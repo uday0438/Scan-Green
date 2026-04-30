@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Sidebar } from './components/Sidebar';
-import { Dashboard } from './components/Dashboard';
-import { ProductScan } from './components/ProductScan';
-import { RoomAudit } from './components/RoomAudit';
-import { Analytics } from './components/Analytics';
-import { Settings } from './components/Settings';
-import { Contact } from './components/Contact';
-import { About } from './components/About';
 import { Chatbot } from './components/Chatbot';
 import { Logo } from './components/Logo';
 import { AppView } from './types';
 import { Menu, X, AlertCircle } from 'lucide-react';
+
+// Lazy loaded components for code splitting
+const Dashboard = lazy(() => import('./components/Dashboard').then(module => ({ default: module.Dashboard })));
+const ProductScan = lazy(() => import('./components/ProductScan').then(module => ({ default: module.ProductScan })));
+const RoomAudit = lazy(() => import('./components/RoomAudit').then(module => ({ default: module.RoomAudit })));
+const Analytics = lazy(() => import('./components/Analytics').then(module => ({ default: module.Analytics })));
+const Settings = lazy(() => import('./components/Settings').then(module => ({ default: module.Settings })));
+const Contact = lazy(() => import('./components/Contact').then(module => ({ default: module.Contact })));
+const About = lazy(() => import('./components/About').then(module => ({ default: module.About })));
 
 export default function App() {
   const [currentView, setCurrentView] = useState<AppView>(AppView.DASHBOARD);
@@ -163,7 +165,14 @@ export default function App() {
         {/* Content Area */}
         <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto">
           <div className="max-w-7xl mx-auto">
-            {renderView()}
+            <Suspense fallback={
+              <div className="flex items-center justify-center h-64 text-emerald-600 font-medium">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mr-3"></div>
+                Loading module...
+              </div>
+            }>
+              {renderView()}
+            </Suspense>
           </div>
         </div>
       </main>

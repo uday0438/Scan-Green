@@ -113,6 +113,11 @@ export const RoomAudit: React.FC = () => {
         title: `Room Audit: ${analysis.plastic_load}% Plastic`
       });
       localStorage.setItem('scangreen_history', JSON.stringify(history.slice(-20))); // Keep last 20
+
+      // GAMIFICATION: Add XP (Room Audits give 100 XP)
+      const currentXp = parseInt(localStorage.getItem('scangreen_xp') || '0', 10);
+      localStorage.setItem('scangreen_xp', (currentXp + 100).toString());
+
     } catch (err) {
       setError("Failed to audit room. Please try again.");
     } finally {

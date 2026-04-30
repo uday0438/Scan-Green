@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Leaf, Minimize2, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Leaf, Minimize2, Loader2, Mic } from 'lucide-react';
 import { ChatMessage } from '../types';
 import { chatWithGreeny } from '../services/geminiService';
 
@@ -18,9 +18,70 @@ export const Chatbot: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const [isListening, setIsListening] = useState(false);
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, isOpen]);
+
+  // --- Voice Synthesis (Text to Speech) ---
+  const speakText = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.1; // Friendly pitch
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  // --- Voice Recognition (Speech to Text) ---
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Your browser does not support Speech Recognition. Try Google Chrome.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => setIsListening(true);
+    
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInputValue(transcript);
+      handleSendMessageFromVoice(transcript);
+    };
+
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+
+    recognition.start();
+  };
+
+  const handleSendMessageFromVoice = async (text: string) => {
+    if (!text.trim() || isLoading) return;
+
+    const userMsg: ChatMessage = { role: 'user', text };
+    setMessages(prev => [...prev, userMsg]);
+    setInputValue("");
+    setIsLoading(true);
+
+    try {
+      const responseText = await chatWithGreeny(messages, text);
+      setMessages(prev => [...prev, { role: 'model', text: responseText }]);
+      speakText(responseText); // Speak the response!
+    } catch (error) {
+      const errText = "Sorry, I had trouble reaching the cloud. Try again later! ☁️";
+      setMessages(prev => [...prev, { role: 'model', text: errText }]);
+      speakText(errText);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -34,8 +95,11 @@ export const Chatbot: React.FC = () => {
     try {
       const responseText = await chatWithGreeny(messages, userMsg.text);
       setMessages(prev => [...prev, { role: 'model', text: responseText }]);
+      speakText(responseText); // Speak response on typing too!
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'model', text: "Sorry, I had trouble reaching the cloud. Try again later! ☁️" }]);
+      const errText = "Sorry, I had trouble reaching the cloud. Try again later! ☁️";
+      setMessages(prev => [...prev, { role: 'model', text: errText }]);
+      speakText(errText);
     } finally {
       setIsLoading(false);
     }
@@ -104,15 +168,34 @@ export const Chatbot: React.FC = () => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Ask about ScanGreen..." 
-                className="w-full pl-4 pr-12 py-3 bg-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-slate-700 placeholder:text-slate-400"
+                className="w-full pl-4 pr-24 py-3 bg-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-slate-700 placeholder:text-slate-400"
               />
-              <button 
-                type="submit" 
-                disabled={!inputValue.trim() || isLoading}
-                className="absolute right-2 top-2 p-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
-              >
-                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              </button>
+              
+              <div className="absolute right-2 top-2 flex items-center gap-1">
+                {/* Voice Button */}
+                <button 
+                  type="button"
+                  onClick={startListening}
+                  disabled={isLoading}
+                  className={`p-1.5 rounded-lg transition-all shadow-sm ${
+                    isListening 
+                      ? 'bg-red-500 text-white animate-pulse' 
+                      : 'bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-100'
+                  }`}
+                  title="Speak to Greeny"
+                >
+                  <Mic className="w-4 h-4" />
+                </button>
+
+                {/* Send Button */}
+                <button 
+                  type="submit" 
+                  disabled={!inputValue.trim() || isLoading}
+                  className="p-1.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
+                >
+                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
           </form>
         </div>
