@@ -1,51 +1,70 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# ScanGreen 🌱
 
-# Run and deploy your AI Studio app
+> **Material Intelligence for a Plastic-Free Future.**
 
-This contains everything you need to run your app locally.
+ScanGreen is an AI-powered environmental auditing platform designed to help individuals and enterprises reduce their plastic footprint. By leveraging advanced vision models, ScanGreen analyzes real-world environments and products to instantly detect synthetic materials, assess hidden health risks (like VOCs and microplastics), and provide actionable, sustainable alternatives.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1rPxdujvAEzaR3ZPkaqx7leXsu6s2WK8-
+---
 
-## Run Locally
+## 🚀 Key Features
 
-**Prerequisites:** Node.js, Python 3.9+
+*   **7-Point Environment Audit**: Snap a photo of any room to receive a comprehensive analysis, including a Polymer Heatmap, Ghost Carbon estimation, Decomposition timelines, and Circular Economy status.
+*   **Intelligent Product Scanning**: Instantly verify if a product is truly eco-friendly or "greenwashed." If an item contains high plastic levels, the AI automatically recommends a sustainable alternative.
+*   **"Greeny" Voice AI Assistant**: A built-in, real-time voice assistant powered by native Speech Recognition. Ask Greeny anything about material science or sustainability, and it will respond with spoken audio.
+*   **Enterprise Gamification**: Users earn "Eco Warrior" XP for every successful scan and audit. The platform automatically aggregates room data to generate an official **Corporate Sustainability Grade (A+ to F)**, making it perfect for B2B premises auditing.
+*   **Live Global News**: A dynamic, auto-updating carousel fetching the latest headlines in climate science, renewable energy, and ocean conservation.
+*   **Progressive Web App (PWA)**: Fully installable on mobile devices with native camera integration for on-the-go scanning.
 
-### 1. Set up Backend (Python)
-Navigate to the root directory and run:
+---
 
-```powershell
-# Create a virtual environment (optional but recommended)
-python -m venv venv
-.\venv\Scripts\activate
+## 🛠️ Tech Stack
 
-# Install dependencies
-pip install -r backend/requirements.txt
+*   **Frontend**: React 18, Vite, TypeScript, Tailwind CSS, Lucide Icons
+*   **Backend**: Python, FastAPI, Vercel Serverless Functions
+*   **AI Engine**: Google Gemini (Vision & Generative Models)
+*   **APIs**: Web Speech API (Speech-to-Text / Text-to-Speech)
+*   **Deployment**: Vercel
 
-# Run the backend
-python backend/main.py
-```
-The backend will run on `http://localhost:8000`.
+---
 
-### 2. Set up Frontend (React)
-Open a new terminal and run:
+## 💻 Running Locally
 
-```powershell
-# Install dependencies
-npm install
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/uday0438/Scan-Green.git
+   cd Scan-Green
+   ```
 
-# Set the GEMINI_API_KEY in .env.local (used by backend)
-# GEMINI_API_KEY=your_key_here
+2. **Install Frontend Dependencies:**
+   ```bash
+   npm install
+   ```
 
-# Run the app
-npm run dev
-```
-The frontend will run on `http://localhost:3000`.
+3. **Install Backend Dependencies:**
+   Make sure you have Python 3 installed, then run:
+   ```bash
+   pip install fastapi uvicorn google-generativeai pillow python-dotenv
+   ```
 
-## Integration Details
-The frontend calls the FastAPI backend located in `/backend`. The backend handles:
-- Gemini AI requests (using the API key from environment variables)
-- Image processing and analysis logic
-- Sustainability news aggregation
-- AI Chatbot responses
+4. **Environment Variables:**
+   Create a `.env.local` file in the root directory and add your Google Gemini API Key:
+   ```env
+   GEMINI_API_KEY=your_api_key_here
+   ```
+
+5. **Start the Development Servers:**
+   *Terminal 1 (Backend):*
+   ```bash
+   python api/index.py
+   ```
+   *Terminal 2 (Frontend):*
+   ```bash
+   npm run dev
+   ```
+
+6. Open `http://localhost:3000` in your browser.
+
+---
+
+## 🌍 Mission
+Built for the 1M1B (1 Million for 1 Billion) initiative, ScanGreen aims to democratize material science, empowering consumers and corporations alike to make transparent, plastic-free decisions.
